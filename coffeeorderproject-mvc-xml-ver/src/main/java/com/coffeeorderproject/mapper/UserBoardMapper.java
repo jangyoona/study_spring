@@ -41,6 +41,10 @@ public interface UserBoardMapper {
 	ArrayList<BoardCommentDto> selectBoardCommentByBoardNo(Integer boardNo);
 
 	BoardAttachDto selectBoardAttachByAttachNo(int attachNo);
+
+	void insertBoardComment(BoardCommentDto comment);
+
+	List<BoardCommentDto> selectBoardCommentsByBoardNo(int boardNo);
 	
 	
 	

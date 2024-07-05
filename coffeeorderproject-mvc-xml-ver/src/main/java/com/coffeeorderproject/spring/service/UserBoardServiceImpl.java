@@ -71,6 +71,7 @@ public class UserBoardServiceImpl implements UserBoardService {
 	}
 	
 	
+	
 	@Override
 	public BoardDto findBoardByBoardNo(Integer boardNo) {
 
@@ -94,7 +95,18 @@ public class UserBoardServiceImpl implements UserBoardService {
 		return attach;
 	}
 	
+	@Override
+	public void writeComment(BoardCommentDto comment) {
+
+		userBoardMapper.insertBoardComment(comment);
+	}
 	
+	@Override
+	public List<BoardCommentDto> findBoardCommentsByBoardNo(int boardNo) {
+		
+		List<BoardCommentDto> comments = userBoardMapper.selectBoardCommentsByBoardNo(boardNo);
+		return comments;
+	}
 	
 	
 }

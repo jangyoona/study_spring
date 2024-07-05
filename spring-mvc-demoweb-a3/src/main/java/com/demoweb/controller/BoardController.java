@@ -14,11 +14,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.View;
 
 import com.demoweb.common.Util;
 import com.demoweb.dto.BoardAttachDto;
+import com.demoweb.dto.BoardCommentDto;
 import com.demoweb.dto.BoardDto;
 import com.demoweb.service.BoardService;
 import com.demoweb.ui.ThePager;
@@ -156,6 +158,17 @@ public class BoardController {
 		// 다운로드 처리 -> 사용자 정의 View 생성+사용
 		return new DownloadView1();
 //		return new DownloadView2();
+	}
+	
+	
+	
+	@GetMapping("/list-comment")
+	public String listComment(int boardNo, Model model) {
+		
+		List<BoardCommentDto> comments = boardService.findBoardCommentsByBoardNo(boardNo);
+		model.addAttribute("comments", comments);
+		
+		return "/board/comment-list";
 	}
 	
 	

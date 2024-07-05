@@ -6,10 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.View;
 
 import com.coffeeorderproject.spring.dto.BoardAttachDto;
+import com.coffeeorderproject.spring.dto.BoardCommentDto;
 import com.coffeeorderproject.spring.dto.BoardDto;
 import com.coffeeorderproject.spring.dto.ProductDto;
 import com.coffeeorderproject.spring.service.UserBoardService;
@@ -75,6 +77,27 @@ public class UserBoardController {
 		model.addAttribute("attach", boardAttach);
 		
 		return new DownloadView();
+	}
+	
+	@PostMapping(path = {"/board/write-comment"}, produces ="text/plain;charset=utf-8")
+	public String writeComment(BoardCommentDto comment, Model model) {
+		
+		System.out.println(comment.getBoardNo());
+		boardService.writeComment(comment);
+		return "redirect:/board/detail?boardNo="+ comment.getBoardNo();
+	}
+	
+	
+	
+	// /////////////////////////////////////////// 아래 메서드 체크 수정 ///////////////////////////////
+	@GetMapping(path = {"/board/comment-list"})
+	public String listComment(int boardNo, Model model) {
+		
+		List<BoardCommentDto> comments = boardService.findBoardCommentsByBoardNo(boardNo);
+		model.addAttribute("comments", comments);
+		
+		return "/board/comment-list";
+			
 	}
 
 }

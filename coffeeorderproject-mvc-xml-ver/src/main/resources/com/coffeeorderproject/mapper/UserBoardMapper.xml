@@ -67,5 +67,22 @@
 		WHERE fileno = #{ attachNo }
 	</select>
 	
+	<insert id="insertBoardComment" parameterType="boardCommentDto">
+		<selectKey keyProperty="commentNo" resultType="int" order="BEFORE">
+			SELECT AUTO_INCREMENT 
+			FROM information_schema.TABLES 
+			WHERE TABLE_SCHEMA = 'hollys' 
+			AND TABLE_NAME = 'comment' 
+		</selectKey>
+		INSERT INTO comment (boardNo, userId, commentContent, groupNo, replycount, replylocation)
+		VALUES (#{ boardNo }, #{ userId }, #{ commentContent }, #{ commentNo }, 1, 0)
+	</insert>
+	
+	<select id="selectBoardCommentsByBoardNo" parameterType="int" resultType="boardCommentDto">
+<!-- 		SELECT commentNo, boardNo, writer, content, writeDate, modifyDate, groupNo, step, depth, deleted 
+		FROM boardcomment 
+		WHERE boardNo = #{ boardNo } 
+		ORDER BY groupNo DESC, step ASC -->
+	</select>
 	
 	</mapper>

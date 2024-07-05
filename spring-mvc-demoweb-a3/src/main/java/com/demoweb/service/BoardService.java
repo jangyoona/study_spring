@@ -3,6 +3,7 @@ package com.demoweb.service;
 import java.util.List;
 
 import com.demoweb.dto.BoardAttachDto;
+import com.demoweb.dto.BoardCommentDto;
 import com.demoweb.dto.BoardDto;
 
 public interface BoardService {
@@ -19,6 +20,10 @@ public interface BoardService {
 	BoardDto findBoardByBoardNo2(int boardNo);
 	
 	BoardAttachDto findBoardAttachByAttachNo(int attachNo);
+
+	void writeComment(BoardCommentDto comment);
+
+	List<BoardCommentDto> findBoardCommentsByBoardNo(int boardNo);
 
 	
 //	void deleteBoard(int boardNo);

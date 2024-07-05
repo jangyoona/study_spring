@@ -10,6 +10,7 @@ import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import com.demoweb.dto.BoardAttachDto;
+import com.demoweb.dto.BoardCommentDto;
 import com.demoweb.dto.BoardDto;
 import com.demoweb.mapper.BoardMapper;
 
@@ -167,14 +168,24 @@ public class BoardServiceImpl implements BoardService {
 //		}
 //		
 //	}
-//
-//	@Override
-//	public void writeComment(BoardCommentDto comment) {
-//		
-//		boardDao.insertComment(comment);
-//		
-//	}
-//
+
+	@Override
+	public void writeComment(BoardCommentDto comment) {
+		
+		boardMapper.insertComment(comment);
+		
+	}
+
+
+
+	@Override
+	public List<BoardCommentDto> findBoardCommentsByBoardNo(int boardNo) {
+		
+		List<BoardCommentDto> comments = boardMapper.selectBoardCommentsByBoardNo(boardNo);
+		return comments;
+	}
+
+
 //	@Override
 //	public void deleteComment(int commentNo) {
 //		

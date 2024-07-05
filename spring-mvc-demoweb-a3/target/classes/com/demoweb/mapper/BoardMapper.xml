@@ -177,5 +177,28 @@
 			WHERE attachNo = #{ attachNo }
 		</select>
 		
+		<!-- Oracle에서는 댓글 등록 + 그룹넘버 바꾸는 작업을 한 쿼리로 끝낼 수 있음 -->
+		<insert id="insertComment" parameterType="BoardCommentDto">
+			INSERT INTO boardcomment (commentno, boardno, writer, content, groupno, step, depth)
+			VALUES (BOARDCOMMENT_SEQUENCE.NEXTVAL, #{ boardNo }, #{ writer }, #{ content }, BOARDCOMMENT_SEQUENCE.CURRVAL, 1, 0)
+		</insert>
+		
+		<insert id="insertComment2" parameterType="BoardCommentDto">
+			<selectKey keyProperty="commentNo" resultType="int" order="BEFORE">
+				SELECT BOARDCOMMENT_SEQUENCE.NEXTVAL FROM DUAL
+			</selectKey>
+			INSERT INTO boardcomment (commentno, boardno, writer, content, groupno, step, depth)
+			VALUES (#{ commentNo }, #{ boardNo }, #{ writer }, #{ content }, #{ commentNo }, 1, 0)
+		</insert>
+		
+		<select id="selectBoardCommentsByBoardNo" parameterType="int" resultType="BoardCommentDto">
+			SELECT commentNo, boardNo, writer, content, writeDate, modifyDate, groupNo, step, depth, deleted 
+			FROM boardcomment 
+			WHERE boardNo = #{ boardNo } 
+			ORDER BY groupNo DESC, step ASC
+		</select>
+		
+		
+		
 	
 	</mapper>

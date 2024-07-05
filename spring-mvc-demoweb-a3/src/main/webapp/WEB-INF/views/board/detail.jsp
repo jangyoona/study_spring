@@ -105,69 +105,6 @@
 	    
 	    <!-- comment list area -->
 	    <table id="comment-list" style="width:800px;border:solid 1px;margin:0 auto">
-		<c:forEach var="comment" items="${ board.comments }">				
-			<tr>
-				<td style="text-align:left;margin:5px;border-bottom: solid 1px;">
-					<table>
-						<tr>
-							<td>
-								<c:forEach begin="0" end="${ comment.depth }">
-									&nbsp;&nbsp;
-								</c:forEach>
-								<c:if test="${ comment.depth > 0 }">
-									<img src="/mvcdemoweb/image/re.gif">
-									&nbsp;
-								</c:if>
-							</td>
-							<td>					
-								<div id="comment-view-area-${ comment.commentNo }">
-								<c:choose>
-								<c:when test="${ comment.deleted }">
-									<br><br>
-									<span style='color:gray'>삭제된 글입니다.</span>
-									<br><br>
-								</c:when>
-								<c:otherwise>
-									${ comment.writer } &nbsp;&nbsp; [<fmt:formatDate value="${ comment.writeDate }" pattern="yyyy-MM-dd hh:mm:ss"/>]
-								    <br /><br />
-								    <span>${ fn:replace(comment.content, enter, "<br>") }</span>
-									<br /><br />
-									<div style='float:left; display:${ (not empty loginuser and loginuser.memberId == comment.writer) ? "block" : "none" }'>
-								    	<a class="edit-comment" data-comment-no="${ comment.commentNo }" href="javascript:">편집</a>
-										&nbsp;
-										<a class="delete-comment" data-comment-no="${ comment.commentNo }" href="javascript:">삭제</a>
-										&nbsp;&nbsp;
-									</div>
-									<div style='float:left; display:${ not empty loginuser ? "block" : "none" }'>
-										<a class="write-recomment" data-comment-no="${ comment.commentNo }" href="javascript:">댓글쓰기</a>
-									</div>
-									<span style="clear:both"></span>
-								</c:otherwise>
-								</c:choose>
-								</div>	                
-								<div id="comment-edit-area-${ comment.commentNo }" style="display: none">
-									${ comment.writer } &nbsp;&nbsp; [${ comment.writeDate }]
-									<br /><br />
-									<form action="edit-comment" method="post">
-									<input type="hidden" name="boardno" value="${ board.boardNo }" />
-									<input type="hidden" name="commentno" value="${ comment.commentNo }" />
-									<textarea name="content" style="width: 99%; resize: none" rows="3" cols="120">${ comment.content }</textarea>
-									</form>
-									<br />
-									<div>
-										<a class="modify-comment" data-comment-no="${ comment.commentNo }" href="javascript:">수정</a> 
-										&nbsp; 
-										<a class="cancel-edit-comment" data-comment-no="${ comment.commentNo }" href="javascript:">취소</a>
-									</div>
-								</div>
-						
-							</td>
-			
-						</tr>
-					</table>
-				</td>
-			</tr>
-		</c:forEach>        	
 		</table>
 		<!-- end of comment list area -->
 		
@@ -223,6 +160,10 @@
 			});
 			//////////////////////////////////////////////////////
 			
+			// 화면이 처음 보여질 때 댓글 목록 가져오기
+			// load : GET방식 비동기 요청, 응답 HTML을 지정된 요소 하위에 추가함.
+			$('#comment-list').load('list-comment', "boardNo=${ board.boardNo }");
+			
 			// 댓글쓰기
 			$('#write-comment-lnk').on('click', function(event) {
 				
@@ -232,12 +173,36 @@
 					return;
 				}
 				
-				$('#commentform').submit(); // <form> 요소를 서버로 전송하는 명령
 				
+				const commentForm = $('#commentform');
+				// commentform.submit(); // <form> 요소를 서버로 전송하는 명령 ( 동기 방식 + All Refresh 방식 )
+				
+				// const data = commentForm.serialize(); // <form> 내부의 모든 입력요소의 값을 뽑아서 전송 - 문자열로 변환
+				const data = commentForm.serializeArray(); // <form> 내부의 모든 입력요소의 값을 뽑아서 전송 - 객체로 변환
+				
+				// 비동기 방식 + Partial Refresh 요청
+				$.ajax({
+					"url" : commentForm.attr('action'), //"write-comment",
+					"method" : commentForm.attr('method'), //"POST",
+					"data" : data,
+					"dataType" : "text",
+					"success" : function(data, status, xhr) {
+						//alert(data);		
+						$('#comment-list').load('list-comment?boardNo=${ board.boardNo }');
+						// $('#comment-list').load('comment-list', "boardNo=${ board.boardNo }");
+					},
+					"error" : function(xhr, status, err) {
+						alert(err);
+					}
+					
+				});
+				$('#comment_content').val("");
 			});
 			
 			// 댓글 삭제
-			$('.delete-comment').on('click', function(event) {
+			// jQuery의 이벤트와 처리기 연결은 코드가 실행되는 시점에 존재하는 객체에 대해서만 적용됨.
+			/* $('.delete-comment').on('click', function(event) { */
+				$('#comment-list').on('click', '.delete-comment', function(event) {
 				const commentNo = $(this).data('comment-no'); // .data('comment-no') -> data-comment-no 속성의 값 조회
 				const ok = confirm(commentNo + "번 댓글을 삭제할까요?");
 				if (ok) {
@@ -255,7 +220,8 @@
 			}
 			
 			// 댓글 수정 1 - 수정 화면으로 변경
-			$('.edit-comment').on('click', function(event) {
+//			$('.edit-comment').on('click', function(event) {
+			$('#comment-list').on('click', '.edit-comment', function(event) {
 				if (currentEditCommentNo != null) {
 					changeCommentEditMode(currentEditCommentNo, false);		
 				}
@@ -264,7 +230,8 @@
 				currentEditCommentNo = commentNo;
 			});
 			// 댓글 수정 2 - 보기 화면으로 변경
-			$('.cancel-edit-comment').on('click', function(event) {
+			//$('.cancel-edit-comment').on('click', function(event) {
+			$('#comment-list').on('click', '.cancel-edit-comment', function(event) {
 				const commentNo = $(this).data('comment-no'); // .data('comment-no') -> data-comment-no 속성의 값 조회
 				changeCommentEditMode(commentNo, false);
 				currentEditCommentNo = null;
@@ -277,7 +244,8 @@
 			});
 			
 			// 대댓글 (recomment) 1. 대댓글 창 표시
-			$('.write-recomment').on('click', function(event) {
+			//$('.write-recomment').on('click', function(event) {
+			$('#comment-list').on('click', '.write-recomment', function(event) {
 				$('#recommentform')[0].reset(); // <form> 초기화 == 닫기 버튼을 눌렀을 때나 뒤로 갔다가 새로운 댓글에 대댓글 달 때 비워주기 위함.
 				const commentNo = $(this).data('comment-no'); // 현재 클릭된 댓글의 번호 (누구의 댓글인지 확인)
 				$('#recommentform input[name=commentno]').val(commentNo);

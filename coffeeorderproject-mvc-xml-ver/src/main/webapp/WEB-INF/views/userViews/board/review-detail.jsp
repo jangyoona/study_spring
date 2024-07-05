@@ -175,14 +175,14 @@
 
 			<!-- ////////////////////////////////////////////////////////////////////// -->
 			<!-- write comment area -->
+			<form id="commentform" action="write-comment" method="post">
 				<input type="hidden" name="boardNo" value="${ board.boardNo }" />
 				<input type="hidden" name="pageNo" value="${ pageNo }" />
 				<input type="hidden" name="userId" value="${ loginUser.userId }" />
-			<form id="commentform" action="write-comment" method="post">
 				<table style="width: 800px; border: solid 1px; margin: 0 auto">
 					<tr>
 						<td style="width: 750px"><textarea id="comment_content"
-								name="content" style="width: 100%; resize: none;" rows="3"></textarea>
+								name="commentContent" style="width: 100%; resize: none;" rows="3"></textarea>
 						</td>
 						<td style="width: 50px; vertical-align: middle">
 							
@@ -210,86 +210,12 @@
 			<br>
 
 			<!-- comment list area -->
-			<table id="comment-list"
-				style="width: 800px; border: solid 1px; margin: 0 auto">
-				<c:forEach var="comment" items="${ board.comments }">
-					<tr>
-						<td
-							style="text-align: left; margin: 5px; border-bottom: solid 1px;">
-							<table>
-								<tr>
-									<td><c:forEach begin="0" end="${ comment.replylocation }">
-									&nbsp;&nbsp;
-								</c:forEach> <c:if test="${ comment.replylocation > 0 }">
-											<img src="/coffeeorderproject/image/re.gif">
-										</c:if></td>
-									<td>
-										<div id="comment-view-area-${ comment.commentNo }">
-											<c:choose>
-												<c:when test="${ comment.commentActive }">
-													<br>
-													<br>
-													<span style='color: gray'>삭제된 글입니다.</span>
-													<br>
-													<br>
-												</c:when>
-												<c:otherwise>
-														${ comment.userId } &nbsp;&nbsp; 
-														[<fmt:formatDate value="${ comment.commentDate }"
-														pattern="yyyy-MM-dd hh:mm:ss" />]
-								  					<br />
-													<br />
-													<span>${ fn:replace(comment.commentContent, enter, "<br>") }</span>
-													<br />
-													<br />
-													<div
-														style='float:left; display:${ (not empty loginUser and loginUser.userId == comment.userId) ? "block" : "none" }'>
-														<a class="edit-comment"
-															data-comment-no="${ comment.commentNo }"
-															href="javascript:">편집</a> &nbsp; <a
-															class="delete-comment"
-															data-comment-no="${ comment.commentNo }"
-															href="javascript:">삭제</a> &nbsp;&nbsp;
-													</div>
-													<div
-														style='float:left; display:${ not empty loginUser ? "block" : "none" }'>
-														<a class="write-recomment"
-															data-comment-no="${ comment.commentNo }"
-															href="javascript:">댓글쓰기</a>
-													</div>
-													<span style="clear: both"></span>
-												</c:otherwise>
-											</c:choose>
-										</div>
-										<div id="comment-edit-area-${ comment.commentNo }"
-											style="display: none">
-											${ comment.userId } &nbsp;&nbsp; [${ comment.commentDate }] <br />
-											<br />
-											<form action="edit-comment" method="post">
-												<input type="hidden" name="boardNo"
-													value="${ board.boardNo }" /> <input type="hidden"
-													name="commentno" value="${ comment.commentNo }" />
-												<textarea name="content" style="width: 99%; resize: none"
-													rows="3" cols="120">${ comment.commentContent }</textarea>
-											</form>
-											<br />
-											<div>
-												<a class="modify-comment"
-													data-comment-no="${ comment.commentNo }" href="javascript:">수정</a>
-												&nbsp; <a class="cancel-edit-comment"
-													data-comment-no="${ comment.commentNo }" href="javascript:">취소</a>
-											</div>
-										</div>
-
-									</td>
-
-								</tr>
-							</table>
-						</td>
-					</tr>
-				</c:forEach>
+			<table id="comment-list" style="width: 800px; border: solid 1px; margin: 0 auto">
+				
 			</table>
 			<!-- end of comment list area -->
+			
+			
 			<!-- Modal -->
 			<div class="modal fade" id="recomment-modal" tabindex="-1"
 				aria-labelledby="recomment-modal-label" aria-hidden="true">
@@ -304,7 +230,7 @@
 						<div class="modal-body">
 							<form id="recommentform" action="write-recomment" method="post">
 								<input type="hidden" name="boardNo" value="${ board.boardNo }" />
-								<input type="hidden" name="commentno" value="" /> <input
+								<input type="hidden" name="commentNo" value="" /> <input
 									type="hidden" name="userId" value="${ loginUser.userId }" />
 
 								<textarea id="recomment-content" name="content"
@@ -320,127 +246,138 @@
 					</div>
 				</div>
 			</div>
-			<script
-				src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-			<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-			<script type="text/javascript">
-				$(function() {
-					$('#delete_button')
-							.on(
-									'click',
-									function(event) {
-										const ok = confirm("${ board.boardNo }번 글을 삭제할까요?");
-										if (ok) {
-											location.href = 'delete?boardNo=${ board.boardNo }';
-										}
-									});
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script type="text/javascript">
+	$(function() {
+		$('#delete_button').on('click', function(event) {
+			const ok = confirm("${ board.boardNo }번 글을 삭제할까요?");
+			if (ok) {
+				location.href = 'delete?boardNo=${ board.boardNo }';
+			}
+		});
 
-					$('#edit_button').on('click', function(event) {
-						location.href = 'edit?boardno=${ board.boardNo }';
-					});
+		$('#edit_button').on('click', function(event) {
+			location.href = 'edit?boardno=${ board.boardNo }';
+		});
 
-					$('#tolist_button').on('click', function(event) {
-						location.href = 'review?pageNo=${ pageNo }';
-					});
+		$('#tolist_button').on('click', function(event) {
+			location.href = 'review?pageNo=${ pageNo }';
+		});
+		
+		
+		// 댓글 목록 보여주기 (Get방식)
+		$('#comment-list').load('comment-list', 'boardNo=${ boardNo }');
+		
+		// 댓글쓰기
+		$('#write-comment-lnk').on('click', function(event) {
+			event.preventDefault();
+			if ($('#comment_content').val().length == 0 && ${loginUser != null} ) {
+				alert('댓글 내용을 작성하세요');
+				$('#comment_content').focus();
+				return;
+			}
+			
+			// $('#commentform').submit();
+			const data = commentForm.serialize();
+			
+			$.ajax({
+				"url" : commentForm.attr('action'),
+				"method" : commentForm.attr('method'),
+				"data" : data,
+				"dataType" : "text",
+				"success" : function(data, status, xhr) {
+					$('#comment-list').load('comment-list?boardNo=${ board.boardNo }');
+				},
+				"error" : function(xhr, status, err) {
+					alert(err);
+				}							
+			});
+			$('#comment_content').val("");
+		});
+		
+		
+		
+		$('#offuser-write-comment-lnk').on('click', function(event) {
+			event.preventDefault();
+			
+			if(${ loginUser == null } ){
+				alert('로그인이 필요합니다.');
+				$('#comment_content').focus();
+				return;
+			}
+		
+		});
+		
+		
 
-					// 댓글쓰기
-					$('#write-comment-lnk').on('click', function(event) {
-						event.preventDefault();
-						if ($('#comment_content').val().length == 0 && ${loginUser != null} ) {
-							alert('댓글 내용을 작성하세요');
-							$('#comment_content').focus();
-							return;
-						}
+		// 댓  삭제
+		$('#comment-list').on('click', '.delete-comment', function(event) {
+			const commentNo = $(this).data('comment-no');
+			const ok = confirm(commentNo+ "에 작성한 댓글을 삭제할까요?");
+			if (ok) {
+				location.href = 'delete-comment?boardNo=${ board.boardNo }&commentno=' + commentNo;
+			}
 
-						$('#commentform').submit();
-					});
-					
-					$('#offuser-write-comment-lnk').on('click', function(event) {
-						event.preventDefault();
-						
-						if(${ loginUser == null } ){
-							alert('로그인이 필요합니다.');
-							$('#comment_content').focus();
-							return;
-						}
-					
-					});
-					
-					
+		});
 
-					// 댓  삭제
-					$('.delete-comment')
-							.on(
-									'click',
-									function(event) {
-										const commentNo = $(this).data(
-												'comment-no');
-										const ok = confirm(commentNo
-												+ "에 작성한 댓글을 삭제할까요?");
-										if (ok) {
-											location.href = 'delete-comment?boardNo=${ board.boardNo }&commentno='
-													+ commentNo;
-										}
+		let currentEditCommentNo = null;
+		// //////////////////////////////////////////////////////////////// 여기까지 수정함!!!!
+		$('.edit-comment').on('click', function(event) {
+			if (currentEditCommentNo != null) {
+				changeCommentEditMode(currentEditCommentNo, false);
+			}
+			const commentNo = $(this).data('comment-no');
+			changeCommentEditMode(commentNo, true);
+			currentEditCommentNo = commentNo;
+		});
+		$('.cancel-edit-comment').on('click', function(event) {
+			const commentNo = $(this).data('comment-no');
+			changeCommentEditMode(commentNo, false);
+			currentEditCommentNo = null;
+		});
 
-									});
-
-					let currentEditCommentNo = null;
-
-					$('.edit-comment').on('click', function(event) {
-						if (currentEditCommentNo != null) {
-							changeCommentEditMode(currentEditCommentNo, false);
-						}
-						const commentNo = $(this).data('comment-no');
-						changeCommentEditMode(commentNo, true);
-						currentEditCommentNo = commentNo;
-					});
-					$('.cancel-edit-comment').on('click', function(event) {
-						const commentNo = $(this).data('comment-no');
-						changeCommentEditMode(commentNo, false);
-						currentEditCommentNo = null;
-					});
-
-					$('.modify-comment').on(
-							'click',
-							function(event) {
-								const commentNo = $(this).data('comment-no');
-								$('#comment-edit-area-' + commentNo + ' form')
-										.submit();
-							});
-
-					$('.write-recomment').on(
-							'click',
-							function(event) {
-
-								$('#recommentform')[0].reset(); // form 초기화
-
-								const commentNo = $(this).data('comment-no');
-								$('#recommentform input[name=commentno]').val(
-										commentNo);
-
-								$('#recomment-modal').modal('show');
-							});
-
-					$('#write-recomment-btn').on('click', function(event) {
-
-						$('#recommentform').submit();
-
-					});
+		$('.modify-comment').on(
+				'click',
+				function(event) {
+					const commentNo = $(this).data('comment-no');
+					$('#comment-edit-area-' + commentNo + ' form')
+							.submit();
 				});
 
-				function changeCommentEditMode(commentNo, isCommentMode) {
-					$('#comment-view-area-' + commentNo).css({
-						'display' : isCommentMode ? 'none' : ''
-					});
-					$('#comment-edit-area-' + commentNo).css({
-						'display' : isCommentMode ? '' : 'none'
-					});
-				}
-				
-			
-				
-				
-			</script>
+		$('.write-recomment').on(
+				'click',
+				function(event) {
+
+					$('#recommentform')[0].reset(); // form 초기화
+
+					const commentNo = $(this).data('comment-no');
+					$('#recommentform input[name=commentno]').val(
+							commentNo);
+
+					$('#recomment-modal').modal('show');
+				});
+
+		$('#write-recomment-btn').on('click', function(event) {
+
+			$('#recommentform').submit();
+
+		});
+	});
+
+	function changeCommentEditMode(commentNo, isCommentMode) {
+		$('#comment-view-area-' + commentNo).css({
+			'display' : isCommentMode ? 'none' : ''
+		});
+		$('#comment-edit-area-' + commentNo).css({
+			'display' : isCommentMode ? '' : 'none'
+		});
+	}
+	
+
+	
+	
+</script>
 
 			<!-- Tastimonial End -->
 

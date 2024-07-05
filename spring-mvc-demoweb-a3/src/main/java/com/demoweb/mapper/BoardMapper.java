@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import com.demoweb.dto.BoardAttachDto;
+import com.demoweb.dto.BoardCommentDto;
 import com.demoweb.dto.BoardDto;
 
 // MyBatis MApper.xml DAO 객체 생성할 때 적용할 인터페이스
@@ -28,6 +29,8 @@ public interface BoardMapper {
 	BoardAttachDto selectBoardAttachByAttachNo(int attachNo);
 	List<BoardDto> selectBoardByRange(@Param("from") int from, @Param("to") int to); // start, count
 	int selectBoardCount();
+	void insertComment(BoardCommentDto comment);
+	List<BoardCommentDto> selectBoardCommentsByBoardNo(int boardNo);
 	
 	
 }
