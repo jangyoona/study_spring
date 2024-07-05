@@ -79,10 +79,10 @@
 	</insert>
 	
 	<select id="selectBoardCommentsByBoardNo" parameterType="int" resultType="boardCommentDto">
-<!-- 		SELECT commentNo, boardNo, writer, content, writeDate, modifyDate, groupNo, step, depth, deleted 
+ 		SELECT commentNo, boardNo, writer, content, writeDate, modifyDate, groupNo, step, depth, deleted 
 		FROM boardcomment 
 		WHERE boardNo = #{ boardNo } 
-		ORDER BY groupNo DESC, step ASC -->
+		ORDER BY groupNo DESC, step ASC 
 	</select>
 	
 	</mapper>

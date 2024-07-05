@@ -271,7 +271,6 @@
 		
 		// 댓글쓰기
 		$('#write-comment-lnk').on('click', function(event) {
-			event.preventDefault();
 			if ($('#comment_content').val().length == 0 && ${loginUser != null} ) {
 				alert('댓글 내용을 작성하세요');
 				$('#comment_content').focus();
@@ -279,6 +278,7 @@
 			}
 			
 			// $('#commentform').submit();
+			const commentForm = $('#commentform');
 			const data = commentForm.serialize();
 			
 			$.ajax({
