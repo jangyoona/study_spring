@@ -156,8 +156,8 @@
 		
 	
 		$('#tolist_button').on('click', function(event) {
-						location.href = 'review?pageNo=${ pageNo }';
-					});
+			location.href = 'review?pageNo=${ pageNo }';
+		});
 		
 		
 
@@ -175,24 +175,16 @@
 
 
 	<!-- JavaScript Libraries -->
-	<script
-		src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-	<script
-		src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-	<script src="/coffeeorderproject/resources/userAssets/lib/easing/easing.min.js"></script>
-	<script
-		src="/coffeeorderproject/resources/userAssets/lib/waypoints/waypoints.min.js"></script>
-	<script
-		src="/coffeeorderproject/resources/userAssets/lib/lightbox/js/lightbox.min.js"></script>
-	<script
-		src="/coffeeorderproject/resources/userAssets/lib/owlcarousel/owl.carousel.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/coffeeorderproject/resources/userAssets/lib/easing/easing.min.js"></script>
+<script src="/coffeeorderproject/resources/userAssets/lib/waypoints/waypoints.min.js"></script>
+<script src="/coffeeorderproject/resources/userAssets/lib/lightbox/js/lightbox.min.js"></script>
+<script src="/coffeeorderproject/resources/userAssets/lib/owlcarousel/owl.carousel.min.js"></script>
 
-	<!-- Template Javascript -->
-	<script src="/coffeeorderproject/resources/userAssets/js/main.js"></script>
-	<script src="/coffeeorderproject/resources/assets/js/core/jquery-3.7.1.js"></script>
-	<script>
-	 console.log(${ loginUser.userId });
-	</script>
+<!-- Template Javascript -->
+<script src="/coffeeorderproject/resources/userAssets/js/main.js"></script>
+<script src="/coffeeorderproject/resources/assets/js/core/jquery-3.7.1.js"></script>
 </body>
 
 </html>

@@ -145,13 +145,16 @@ public class MyPageController {
 			attachments.add(attachment);
 		
 		} catch (Exception ex) {
-			ex.printStackTrace();
 		}
-//		String userId = (String)req.getSession().getAttribute("userId");
-//		board.setUserId(userId);
+
 		board.setAttachments(attachments);
-		userBoardService.writeBoard(board);
 		
+		try {
+			userBoardService.writeBoard(board);
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("글쓰기 실패");
+		}
 		
 		return "redirect:/board/review";
 	}

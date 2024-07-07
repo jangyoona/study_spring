@@ -72,12 +72,12 @@ public class BoardServiceImpl implements BoardService {
 
 	
 	@Override
-	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED)
+	//@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED, isolation = Isolation.READ_UNCOMMITTED)
 	public void writeBoard(BoardDto board) {
 	
 		boardMapper.insertBoard2(board);
 		
-		int x = 10/ 0; // 트랜잭션 테스트를 위해서 강제 예외 발생
+		//int x = 10/ 0; // 트랜잭션 테스트를 위해서 강제 예외 발생
 		
 		for (BoardAttachDto attach : board.getAttachments()) {
 			attach.setBoardNo(board.getBoardNo()); // 위 게시글 insert 후 생성된 글번호 저장

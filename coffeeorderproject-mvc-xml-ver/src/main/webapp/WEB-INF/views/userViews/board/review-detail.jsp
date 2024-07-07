@@ -214,7 +214,7 @@
 				
 			</table>
 			<!-- end of comment list area -->
-			
+			<br><br><br><br><br>
 			
 			<!-- Modal -->
 			<div class="modal fade" id="recomment-modal" tabindex="-1"
@@ -267,14 +267,14 @@
 		
 		
 		// 댓글 목록 보여주기 (Get방식)
-		$('#comment-list').load('comment-list', 'boardNo=${ boardNo }');
+		$('#comment-list').load('comment-list', "boardNo=${ board.boardNo }");
 		
 		// 댓글쓰기
 		$('#write-comment-lnk').on('click', function(event) {
-			if ($('#comment_content').val().length == 0 && ${loginUser != null} ) {
+/* 			if ($('#comment_content').val().length == 0 && ${loginUser != null} ) {
 				alert('댓글 내용을 작성하세요');
 				$('#comment_content').focus();
-				return;
+				return; */
 			}
 			
 			// $('#commentform').submit();
@@ -293,7 +293,9 @@
 					alert(err);
 				}							
 			});
-			$('#comment_content').val("");
+			if($('#comment_content') != ""){
+				$('#comment_content').val("");
+			}
 		});
 		
 		
@@ -320,10 +322,12 @@
 			}
 
 		});
-
+		
+		
+		// 댓글 수정 0 - 공통 변수 및 함수 선언
 		let currentEditCommentNo = null;
-		// //////////////////////////////////////////////////////////////// 여기까지 수정함!!!!
-		$('.edit-comment').on('click', function(event) {
+		
+		$('#comment-list').on('click', '.edit-comment', function(event) {
 			if (currentEditCommentNo != null) {
 				changeCommentEditMode(currentEditCommentNo, false);
 			}
@@ -331,32 +335,28 @@
 			changeCommentEditMode(commentNo, true);
 			currentEditCommentNo = commentNo;
 		});
-		$('.cancel-edit-comment').on('click', function(event) {
+		$('#comment-list').on('click', '.cancel-edit-comment', function(event) {
 			const commentNo = $(this).data('comment-no');
 			changeCommentEditMode(commentNo, false);
 			currentEditCommentNo = null;
 		});
 
-		$('.modify-comment').on(
-				'click',
-				function(event) {
+		$('#comment-list').on('click', '.modify-comment', function(event) {
 					const commentNo = $(this).data('comment-no');
 					$('#comment-edit-area-' + commentNo + ' form')
 							.submit();
 				});
 
-		$('.write-recomment').on(
-				'click',
-				function(event) {
+		$('.write-recomment').on('click', function(event) {
 
-					$('#recommentform')[0].reset(); // form 초기화
+			$('#recommentform')[0].reset(); // form 초기화
 
-					const commentNo = $(this).data('comment-no');
-					$('#recommentform input[name=commentno]').val(
-							commentNo);
+			const commentNo = $(this).data('comment-no');
+			$('#recommentform input[name=commentno]').val(
+					commentNo);
 
-					$('#recomment-modal').modal('show');
-				});
+			$('#recomment-modal').modal('show');
+		});
 
 		$('#write-recomment-btn').on('click', function(event) {
 

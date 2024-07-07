@@ -164,7 +164,6 @@ public class BoardController {
 	
 	@GetMapping("/list-comment")
 	public String listComment(int boardNo, Model model) {
-		
 		List<BoardCommentDto> comments = boardService.findBoardCommentsByBoardNo(boardNo);
 		model.addAttribute("comments", comments);
 		

@@ -45,7 +45,7 @@ public class UserBoardController {
 		String queryString = req.getQueryString();
 		
 		
-		int start = pageSize * (pageNo - 1) + 1;
+		int start = pageSize * (pageNo - 1); // + 1; 이거 오라클 기준으로 계산된거 같은데? +1 빼니까 작성된 글 바로바로 잘 나옴.
 		
 		ThePager pager = new ThePager(dataCount, pageNo, pageSize, pagerSize, linkUrl, queryString);
 		
@@ -62,12 +62,15 @@ public class UserBoardController {
 	}
 	
 	@GetMapping("/board/detail")
-	public String reviewDetail(Integer boardNo, Model model) {
-		System.out.println(boardNo);
-		if(boardNo != null) {
-			BoardDto board = boardService.findBoardByBoardNo(boardNo);
-			model.addAttribute("board", board);
+	public String reviewDetail(@RequestParam(name = "boardNo", required = false) Integer boardNo,
+							   @RequestParam(name = "pageNo", defaultValue = "1") int pageNo, Model model) {
+		if(boardNo == null) {
+			return "redirect:/board/review";
 		}
+		BoardDto board = boardService.findBoardByBoardNo(boardNo);
+		model.addAttribute("board", board);
+		model.addAttribute("pageNo", pageNo);
+		
 		return "/board/review-detail";
 	}
 	
@@ -82,7 +85,6 @@ public class UserBoardController {
 	@PostMapping(path = {"/board/write-comment"}, produces ="text/plain;charset=utf-8")
 	public String writeComment(BoardCommentDto comment, Model model) {
 		
-		System.out.println(comment.getBoardNo());
 		boardService.writeComment(comment);
 		return "redirect:/board/detail?boardNo="+ comment.getBoardNo();
 	}
@@ -92,7 +94,6 @@ public class UserBoardController {
 	// /////////////////////////////////////////// 아래 메서드 체크 수정 ///////////////////////////////
 	@GetMapping(path = {"/board/comment-list"})
 	public String listComment(int boardNo, Model model) {
-		
 		List<BoardCommentDto> comments = boardService.findBoardCommentsByBoardNo(boardNo);
 		model.addAttribute("comments", comments);
 		
