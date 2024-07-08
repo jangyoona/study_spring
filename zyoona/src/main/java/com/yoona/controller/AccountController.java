@@ -3,6 +3,7 @@ package com.yoona.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -47,16 +48,15 @@ public class AccountController {
 	}
 	
 	@PostMapping("/register")
-	public String register(MemberDto member) {
+	public String register(MemberDto member, HttpSession session) {
 		
 		accountService.registerMember(member);
-		
 		return "redirect:/account/login";
 	}
 	
-	@GetMapping("register-idCheck")
+	@GetMapping("register-idCheck/{memberId}")
 	@ResponseBody
-	public String registerIdCheck(String memberId) {
+	public String registerIdCheck(@PathVariable("memberId") String memberId) {
 		
 		boolean isId = accountService.registerMemberIdCheck(memberId);
 		

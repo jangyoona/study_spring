@@ -85,4 +85,8 @@
 		ORDER BY groupno DESC, replycount ASC 
 	</select>
 	
+	<update id="deleteComment" parameterType="int">
+		UPDATE comment set commentActive = true WHERE commentNo = #{ commentNo }
+	</update>
+	
 	</mapper>

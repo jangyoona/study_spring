@@ -230,8 +230,8 @@
 						<div class="modal-body">
 							<form id="recommentform" action="write-recomment" method="post">
 								<input type="hidden" name="boardNo" value="${ board.boardNo }" />
-								<input type="hidden" name="commentNo" value="" /> <input
-									type="hidden" name="userId" value="${ loginUser.userId }" />
+								<input type="hidden" name="commentNo" value="" />
+								<input type="hidden" name="userId" value="${ loginUser.userId }" />
 
 								<textarea id="recomment-content" name="content"
 									class="form-control" style="resize: none;" rows="3"></textarea>
@@ -274,8 +274,8 @@
 /* 			if ($('#comment_content').val().length == 0 && ${loginUser != null} ) {
 				alert('댓글 내용을 작성하세요');
 				$('#comment_content').focus();
-				return; */
-			}
+				return; 
+			}*/
 			
 			// $('#commentform').submit();
 			const commentForm = $('#commentform');
@@ -318,7 +318,26 @@
 			const commentNo = $(this).data('comment-no');
 			const ok = confirm(commentNo+ "에 작성한 댓글을 삭제할까요?");
 			if (ok) {
-				location.href = 'delete-comment?boardNo=${ board.boardNo }&commentno=' + commentNo;
+				// location.href = 'delete-comment?boardNo=${ board.boardNo }&commentno=' + commentNo;
+				
+				$.ajax({
+					'url' : 'delete-comment',
+					'data' : 'commentNo=' + commentNo,
+					'method' : 'GET',
+					'success' : function(result, status, xhr) {
+						if(result === 'success') {
+							$('#comment-list').load('comment-list', "boardNo=${ board.boardNo }");
+						} else {
+							alert('댓글 삭제 실패1')
+						}
+					},
+					'error' : function(xhr, status, err) {
+						alert("댓글 삭제 실패2");
+					}
+					
+					
+				});
+				
 			}
 
 		});
@@ -379,35 +398,30 @@
 	
 </script>
 
-			<!-- Tastimonial End -->
+<!-- Tastimonial End -->
 
 
-			<!-- Footer Start -->
-			<jsp:include page="/WEB-INF/views/userViews/modules/footer.jsp" />
-			<!-- Footer End -->
+<!-- Footer Start -->
+<jsp:include page="/WEB-INF/views/userViews/modules/footer.jsp" />
+<!-- Footer End -->
 
 
-			<!-- Back to Top -->
-			<a href="#"
-				class="btn btn-primary border-3 border-primary rounded-circle back-to-top"><i
-				class="fa fa-arrow-up"></i></a>
+<!-- Back to Top -->
+<a href="#"
+	class="btn btn-primary border-3 border-primary rounded-circle back-to-top"><i
+	class="fa fa-arrow-up"></i></a>
 
 
-			<!-- JavaScript Libraries -->
-			<script
-				src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-			<script
-				src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-			<script src="/coffeeorderproject/resources/userAssets/lib/easing/easing.min.js"></script>
-			<script
-				src="/coffeeorderproject/resources/userAssets/lib/waypoints/waypoints.min.js"></script>
-			<script
-				src="/coffeeorderproject/resources/userAssets/lib/lightbox/js/lightbox.min.js"></script>
-			<script
-				src="/coffeeorderproject/resources/userAssets/lib/owlcarousel/owl.carousel.min.js"></script>
+<!-- JavaScript Libraries -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/coffeeorderproject/resources/userAssets/lib/easing/easing.min.js"></script>
+<script src="/coffeeorderproject/resources/userAssets/lib/waypoints/waypoints.min.js"></script>
+<script src="/coffeeorderproject/resources/userAssets/lib/lightbox/js/lightbox.min.js"></script>
+<script src="/coffeeorderproject/resources/userAssets/lib/owlcarousel/owl.carousel.min.js"></script>
 
-			<!-- Template Javascript -->
-			<script src="/coffeeorderproject/resources/userAssets/js/main.js"></script>
+<!-- Template Javascript -->
+<script src="/coffeeorderproject/resources/userAssets/js/main.js"></script>
 </body>
 
 </html>

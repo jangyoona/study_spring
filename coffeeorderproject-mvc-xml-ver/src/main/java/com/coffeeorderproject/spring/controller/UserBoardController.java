@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.View;
 
 import com.coffeeorderproject.spring.dto.BoardAttachDto;
@@ -99,6 +100,18 @@ public class UserBoardController {
 		
 		return "/board/comment-list";
 			
+	}
+	
+	@GetMapping("/board/delete-comment")
+	@ResponseBody
+	public String deleteComment(@RequestParam(required = false) Integer commentNo) {
+		
+		if(commentNo == -1) {
+			return "잘못된 접근입니다.";
+		}
+		boardService.deleteComment(commentNo);
+		
+		return "success";
 	}
 
 }

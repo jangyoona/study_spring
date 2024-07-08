@@ -45,6 +45,8 @@ public interface UserBoardMapper {
 	void insertBoardComment(BoardCommentDto comment);
 
 	List<BoardCommentDto> selectBoardCommentsByBoardNo(int boardNo);
+
+	void deleteComment(int commentNo);
 	
 	
 	

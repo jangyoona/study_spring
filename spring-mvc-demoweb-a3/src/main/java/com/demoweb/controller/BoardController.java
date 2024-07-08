@@ -1,7 +1,6 @@
 package com.demoweb.controller;
 
 import java.io.File;
-import java.net.http.HttpRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +24,6 @@ import com.demoweb.dto.BoardDto;
 import com.demoweb.service.BoardService;
 import com.demoweb.ui.ThePager;
 import com.demoweb.view.DownloadView1;
-import com.demoweb.view.DownloadView2;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Setter;
@@ -160,6 +158,90 @@ public class BoardController {
 //		return new DownloadView2();
 	}
 	
+	@GetMapping("/delete")
+	public String deleteBoard(int boardNo, @RequestParam(defaultValue = "-1") int pageNo) {
+		
+		if(pageNo == -1) {
+			return "redirect:list"; 
+		}
+		boardService.deleteBoard(boardNo);
+		
+		return String.format("redirect:/board/list?pageNo=%d", pageNo);
+	}
+	
+	@GetMapping("/edit")
+	public String showEditForm(int boardNo, @RequestParam(defaultValue = "-1") int pageNo, Model model) {
+		
+		if(pageNo == -1) {
+			System.out.println("if문 안");
+			return "redirect:list";
+		}
+		
+		BoardDto board = boardService.findBoardByBoardNo(boardNo);
+		model.addAttribute("board", board);
+		model.addAttribute("pageNo", pageNo);
+		
+		return "/board/edit";
+	}
+	
+	@PostMapping("/edit")
+	public String editBoard(BoardDto board, MultipartFile attach, HttpServletRequest req, @RequestParam(required = false) Integer pageNo) {
+		
+		if(board.getBoardNo() == 0 || pageNo == null) {
+			return "redirect:list";
+		}
+		
+		if(attach != null && attach.getSize() > 0) {
+			BoardAttachDto attachment = new BoardAttachDto();
+			ArrayList<BoardAttachDto> attachments = new ArrayList<>();
+			
+			try {
+				String dir = req.getServletContext().getRealPath("/board-attachments");
+				String userFileName = attach.getOriginalFilename();
+				String savedFileName = Util.makeUniqueFileName(userFileName);
+				attach.transferTo(new File(dir, savedFileName)); // 저장
+				
+				attachment.setBoardNo(board.getBoardNo());
+				attachment.setUserFileName(userFileName);
+				attachment.setSavedFileName(savedFileName);
+				attachments.add(attachment);
+			
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+			board.setAttachments(attachments);
+			
+			try {
+				boardService.modifyBoard(board);
+			} catch (Exception e) {
+				System.out.println("글 수정 실패");
+				return String.format("redirect:edit?boardNo=%d&pageNo=%d", board.getBoardNo(), pageNo); 
+			}
+		}
+		return String.format("redirect:detail?boardNo=%d&pageNo=%d", board.getBoardNo(), pageNo);
+	}
+	
+	@GetMapping("/delete-attach")
+	@ResponseBody
+	public String deleteAttach(@RequestParam(required = false) Integer attachNo, HttpServletRequest req) {
+		
+		if(attachNo == null) {
+			return "invalid attachNo";
+		}
+		
+		// edit-page 파일 삭제
+		BoardAttachDto attach = boardService.findBoardAttachByAttachNo(attachNo);
+		String dirpath = req.getServletContext().getRealPath("/board-attachments");
+		File file = new File(dirpath, attach.getSavedFileName());
+		
+		if(file.exists()) {
+			file.delete();
+		}
+		boardService.deleteBoardAttach(attachNo);
+		
+		return "success";
+	}
+	
 	
 	
 	@GetMapping("/list-comment")
@@ -170,5 +252,9 @@ public class BoardController {
 		return "/board/comment-list";
 	}
 	
+
+	
+	
+
 	
 }

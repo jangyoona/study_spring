@@ -107,6 +107,13 @@ public class UserBoardServiceImpl implements UserBoardService {
 		List<BoardCommentDto> comments = userBoardMapper.selectBoardCommentsByBoardNo(boardNo);
 		return comments;
 	}
+
+
+	@Override
+	public void deleteComment(int commentNo) {
+		
+		userBoardMapper.deleteComment(commentNo);
+	}
 	
 	
 }

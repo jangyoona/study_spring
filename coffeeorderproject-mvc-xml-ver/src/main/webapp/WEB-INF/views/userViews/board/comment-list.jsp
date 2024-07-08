@@ -17,8 +17,6 @@
 		border-bottom: none;
 	}
 </style>
-</head>
-<body>
 	<c:forEach var="comment" items="${ comments }">
 		<tr>
 			<table>
@@ -89,7 +87,3 @@
 			</table>
 		</tr>
 	</c:forEach>
-<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-<script type="text/javascript"></script>
-</body>
-</html>

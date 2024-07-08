@@ -2,11 +2,6 @@ package com.demoweb.service;
 
 import java.util.List;
 
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import com.demoweb.dto.BoardAttachDto;
@@ -145,29 +140,30 @@ public class BoardServiceImpl implements BoardService {
 		return attach;
 	}
 
-//	@Override
-//	public void deleteBoard(int boardNo) {
-//		boardDao.updateBoardDeleted(boardNo);
-//		
-//	}
-//
-//	@Override
-//	public void deleteBoardAttach(int attachNo) {
-//		
-//		boardDao.deleteBoardAttach(attachNo);
-//		
-//	}
-//
-//	@Override
-//	public void modifyBoard(BoardDto board) {
-//		
-//		boardDao.updateBoard(board);
-//		
-//		for (BoardAttachDto attach : board.getAttachments()) {
-//			boardDao.insertBoardAttach(attach);
-//		}
-//		
-//	}
+	@Override
+	public void deleteBoard(int boardNo) {
+		boardMapper.updateBoardDeleted(boardNo);
+		
+	}
+
+	@Override
+	public void deleteBoardAttach(int attachNo) {
+		
+		boardMapper.deleteBoardAttach(attachNo);
+		
+	}
+
+	@Override
+	public void modifyBoard(BoardDto board) {
+		
+		boardMapper.updateBoard(board);
+		if(board.getAttachments() != null) {
+			for (BoardAttachDto attach : board.getAttachments()) {
+				boardMapper.insertBoardAttach(attach);
+			}
+		}
+		
+	}
 
 	@Override
 	public void writeComment(BoardCommentDto comment) {
@@ -186,35 +182,35 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 
-//	@Override
-//	public void deleteComment(int commentNo) {
-//		
-//		boardDao.deleteComment(commentNo); // boardDao.updateCommentDeleted(commentNo)
-//		
-//	}
-//
-//	@Override
-//	public void editComment(BoardCommentDto comment) {
-//		
-//		boardDao.updateComment(comment);
-//		
-//	}
-//
-//	@Override
-//	public void writeReComment(BoardCommentDto comment) {
-//		
-//		// 부모 댓글을 조회해서 자식 댓글(대댓글)의 step, depth를 설정
-//		BoardCommentDto parent = boardDao.selectBoardCommentByCommentNo(comment.getCommentNo());
-//		comment.setGroupNo(parent.getGroupNo());
-//		comment.setStep(parent.getStep() + 1);
-//		comment.setDepth(parent.getDepth() + 1);
-//		
-//		// 새로 삽입될 대댓글보다 순서번호(step)가 뒤에 있는 대댓글의 step 수정 (+1)
-//		boardDao.updateStep(parent);
-//		
-//		boardDao.insertReComment(comment);
-//		
-//	}
+	@Override
+	public void deleteComment(int commentNo) {
+		
+		boardMapper.updateCommentDeleted(commentNo);
+		
+	}
+
+	@Override
+	public void editComment(BoardCommentDto comment) {
+		
+		boardMapper.updateComment(comment);
+		
+	}
+
+	@Override
+	public void writeReComment(BoardCommentDto comment) {
+		
+		// 부모 댓글을 조회해서 자식 댓글(대댓글)의 step, depth를 설정
+		BoardCommentDto parent = boardMapper.selectBoardCommentByCommentNo(comment.getCommentNo());
+		comment.setGroupNo(parent.getGroupNo());
+		comment.setStep(parent.getStep() + 1);
+		comment.setDepth(parent.getDepth() + 1);
+		
+		// 새로 삽입될 대댓글보다 순서번호(step)가 뒤에 있는 대댓글의 step 수정 (+1)
+		boardMapper.updateStep(parent);
+		
+		boardMapper.insertReComment(comment);
+		
+	}
 
 	
 }

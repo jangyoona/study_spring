@@ -1,7 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+	
+<%@ taglib prefix="c" uri="jakarta.tags.core"%>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions"%>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt"%>
+
 <!DOCTYPE html>
 <html lang="ko">
 
@@ -103,7 +106,7 @@
                         <c:choose>
                             <c:when test="${orderList.orderId != previousOrderId}">
                                 <tr>
-                                    <td>${orderList.orderDate}</td>
+                                    <td><fmt:formatDate value="${orderList.orderDate}" pattern="yyyy-MM-dd HH:mm:ss" /></td>
                                     <td>${orderList.orderId}</td>
                                     <td>${orderList.userName}</td>
                                     <td>${orderList.prodName}</td>

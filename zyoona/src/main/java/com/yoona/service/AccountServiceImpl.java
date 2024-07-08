@@ -28,7 +28,6 @@ public class AccountServiceImpl implements AccountService {
 		member.setPasswd(hashedPasswd);
 		
 		accountMapper.insertMember(member);
-		
 	}
 
 	@Override

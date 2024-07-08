@@ -177,6 +177,14 @@
 			WHERE attachNo = #{ attachNo }
 		</select>
 		
+		<update id="deleteBoardAttach" parameterType="int">
+			DELETE FROM boardattach WHERE attachno = #{ attachNo }
+		</update>
+		
+		<update id="updateBoard" parameterType="BoardDto">
+			UPDATE board SET title = #{ title }, content = #{ content } WHERE boardNo = #{ boardNo }
+		</update>
+		
 		<!-- Oracle에서는 댓글 등록 + 그룹넘버 바꾸는 작업을 한 쿼리로 끝낼 수 있음 -->
 		<insert id="insertComment" parameterType="BoardCommentDto">
 			INSERT INTO boardcomment (commentno, boardno, writer, content, groupno, step, depth)
@@ -198,7 +206,40 @@
 			ORDER BY groupNo DESC, step ASC
 		</select>
 		
+		<update id="updateCommentDeleted" parameterType="int">
+			UPDATE boardcomment SET deleted = '1' WHERE commentno = #{ commentNo }
+		</update>
+		
+		<update id="updateComment" parameterType="BoardCommentDto">
+			UPDATE boardcomment SET content = #{ content } WHERE commentNo = #{ commentNo }
+		</update>
 		
 		
+		<select id="selectBoardCommentByCommentNo" parameterType="int" resultType="BoardCommentDto">
+			SELECT commentNo, boardNo, writer, content, writedate, modifydate, groupno, step, depth, deleted 
+			FROM boardcomment 
+			WHERE commentNo = #{ commentNo }
+		</select>
+		
+		<update id="updateStep" parameterType="BoardCommentDto">
+			<![CDATA[
+			UPDATE boardcomment
+			SET step = step + 1
+			WHERE groupno = #{ groupNo } AND step > #{ step }
+			]]>
+		</update>
 	
+		<insert id="insertReComment" parameterType="BoardCommentDto">
+			INSERT INTO boardcomment (commentNo, boardNo, writer, content, groupNo, step, depth)
+			VALUES (BOARDCOMMENT_SEQUENCE.NEXTVAL, #{ boardNo }, #{ writer}, #{ content }, #{ groupNo }, #{ step }, #{ depth })
+		</insert>
+		
+		<update id="updateBoardDeleted" parameterType="int">
+			UPDATE board SET deleted = '1' WHERE boardNo = #{ boardNo }
+		</update>
+		
+
+		
+		
+		
 	</mapper>

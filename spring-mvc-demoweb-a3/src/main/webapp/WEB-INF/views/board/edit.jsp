@@ -25,7 +25,8 @@
 		    <div id="inputmain">
 		        <div class="inputsubtitle">게시글 정보</div>
 		        <form action="edit" method="post" enctype="multipart/form-data">
-		        <input type = "hidden" name="boardno" value = "${ board.boardNo }">
+		        <input type = "hidden" name="boardNo" value = "${ board.boardNo }">
+		        <input type = "hidden" name="pageNo" value = "${ pageNo }">
 		        
 		        <table>
 		            <tr>
@@ -42,11 +43,10 @@
 		                <th>첨부파일</th>
 		                <td>
 		                	<c:forEach var="attach" items="${ board.attachments }">
-		                	
-
-		                	
+		                	<div data-attachno='${ attach.attachNo }'>
 		                	${ attach.userFileName } 
-		                	[<a href='delete-attach?attachno=${ attach.attachNo }&boardno=${ board.boardNo }'>삭제</a>]<br>
+		                	[<a href='javascript:' class='delete-attach' data-attachno='${ attach.attachNo }'>삭제</a>]
+		                	</div>
     			          	</c:forEach>
 		                    <input type="file" name="attach" style="width:580px;height:20px" />
 		                </td>
@@ -74,6 +74,34 @@
 	<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 	<script type="text/javascript">
 	
+		$(function() {
+			$('#btn-cancel').on('click', function(event) {
+				location.href = 'detail?boardno=${ board.boardNo }&pageNo=${ pageNo }';
+			});
+			
+			$('.delete-attach').on('click', function() {
+				const attachNo = $(this).data('attachno');
+				//alert(attachNo);
+				$.ajax({
+					'url' : 'delete-attach',
+					'mathod' : 'GET',
+					'data' : { 'attachNo' : attachNo }, // 'attachNo=' + attachNo
+					'success' : function(result, status, xhr) {
+						if(result === 'success'){
+							alert('첨부파일을 삭제했습니다.');
+							$("div[data-attachno=" + attachNo + "]").remove();
+						} else {
+							alert('fail to delete attach 1');
+						}
+					},
+					'error' : function(xhr, status, err) {
+						alert('fail to delete attach 2');
+					}
+				});
+				
+				
+			});
+		});
 	</script>
 
 </body>

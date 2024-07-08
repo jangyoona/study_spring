@@ -3,8 +3,9 @@
 
 <%-- <%@ taglib prefix="c" uri="jakarta.tags.core"%> --%>
 <!-- 라이브러리 -->
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="c" uri="jakarta.tags.core"%>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions"%>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt"%>
 
 
 <!DOCTYPE html>

@@ -29,8 +29,18 @@ public interface BoardMapper {
 	BoardAttachDto selectBoardAttachByAttachNo(int attachNo);
 	List<BoardDto> selectBoardByRange(@Param("from") int from, @Param("to") int to); // start, count
 	int selectBoardCount();
+	
 	void insertComment(BoardCommentDto comment);
 	List<BoardCommentDto> selectBoardCommentsByBoardNo(int boardNo);
+	void updateCommentDeleted(int commentNo);
+	void updateComment(BoardCommentDto comment);
+	
+	BoardCommentDto selectBoardCommentByCommentNo(int commentNo);
+	void updateStep(BoardCommentDto parent);
+	void insertReComment(BoardCommentDto comment);
+	void updateBoardDeleted(int boardNo);
+	void deleteBoardAttach(int attachNo);
+	void updateBoard(BoardDto board);
 	
 	
 }

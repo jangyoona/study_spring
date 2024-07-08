@@ -23,22 +23,25 @@ public interface BoardService {
 
 	void writeComment(BoardCommentDto comment);
 
+	void deleteComment(int commentNo);
+	
+	void editComment(BoardCommentDto comment);
+	
+	void writeReComment(BoardCommentDto comment);
+	
 	List<BoardCommentDto> findBoardCommentsByBoardNo(int boardNo);
 
-	
-//	void deleteBoard(int boardNo);
-//
-//	void deleteBoardAttach(int attachNo);
-//
-//	void modifyBoard(BoardDto board);
+	void deleteBoard(int boardNo);
+
+	void deleteBoardAttach(int attachNo);
+
+	void modifyBoard(BoardDto board);
 //
 //	void writeComment(BoardCommentDto comment);
 //
 //	void deleteComment(int commentNo);
 //
-//	void editComment(BoardCommentDto comment);
-//
-//	void writeReComment(BoardCommentDto comment);
+
 //
 
 }

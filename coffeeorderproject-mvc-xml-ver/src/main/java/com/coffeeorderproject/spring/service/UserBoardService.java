@@ -29,6 +29,8 @@ public interface UserBoardService {
 	void writeComment(BoardCommentDto comment);
 
 	List<BoardCommentDto> findBoardCommentsByBoardNo(int boardNo);
+
+	void deleteComment(int commentNo);
 	
 
 }

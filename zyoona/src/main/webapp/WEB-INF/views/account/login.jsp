@@ -17,8 +17,8 @@
 				<td>비밀번호 <input type="text" name="passwd" /></td>
 			</tr>
 			<tr>
-				<td><button id="login-btn">로그인</button></td>
-				<td><button id="cansel-btn">취소</button></td>
+				<td><button id="login-btn">로그인</button>
+				<button id="cansel-btn">취소</button></td>
 			</tr>
 		</table>
 	</form>
